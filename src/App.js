@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Header from './components/Header';
+import Rota from './pages/Rota';
+import Sessões from './pages/Sessões';
+import Assentos from './pages/Assentos';
+import Sucesso from './pages/Sucesso';
+import GlobalStyle from "./GlobalStyle";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+  return(
+    <BrowserRouter>
+    < Header/>
+    <Routes>
+      <Route path="/" element={<Rota />}/>
+      <Route path="/Sessões" element={<Sessões />}/>
+      <Route path="/Assentos" element={<Assentos/>}/>
+      <Route path="/Sucesso" element={<Sucesso/>}/>
+    </Routes>
+    <GlobalStyle />
+  </BrowserRouter>
+  )
 }
-
-export default App;
