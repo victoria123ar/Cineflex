@@ -1,9 +1,30 @@
 import React from 'react';
-import Sonic from "../assets/sonic.jfif";
 import styled from "styled-components";
-import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from "react-router-dom"
+import Sessao from "../components/Sessoes/Sessao";
 
 export default function Sessoes() {
+  const [filme, setFilme] = useState(undefined)
+  const { filmeId } = useParams()
+
+  useEffect(() => {
+    axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${filmeId}/showtimes`)
+    .then((resposta) => setFilme(resposta.data))
+    .catch((erro) => setFilme(erro.data))
+  }, [])
+
+console.log(filme)
+
+if (!filme) {
+  return <CarregarContainer>
+    <Carregar>
+    </Carregar>
+    <p>Carregando...</p>
+    </CarregarContainer>;
+}
+
   return (
     <>
       <main>
@@ -11,31 +32,15 @@ export default function Sessoes() {
           <p>Selecione o horário</p>
         </Titulo>
         <Horarios>
-          <Horario>
-            <p>Quinta-feira - 24/06/2021</p>
-            <Botoes>
-              <Link to = '/Assentos'>
-              <Botao>15:00</Botao>
-              <Botao>19:00</Botao>
-              </Link>
-            </Botoes>
-          </Horario>
-          <Horario>
-            <p>Sexta-feira - 25/06/2021</p>
-            <Botoes>
-            <Link to = '/Assentos'>
-              <Botao>15:00</Botao>
-              <Botao>19:00</Botao>
-              </Link>
-            </Botoes>
-          </Horario>
-        </Horarios>
+        {filme.days.map((dia) => ( <Sessao filme={dia} key={dia.id} />
+        ))}
+          </Horarios>
       </main>
       <Footer>
         <Imagem>
-          <img src={Sonic} alt="Sonic" />
+          <img src={filme.posterURL} alt="{filme.title}" />
         </Imagem>
-        <p>Sonic 2</p>
+        <p>{filme.title}</p>
       </Footer>
     </>
   );
@@ -63,38 +68,6 @@ const Horarios = styled.div`
   justify-content: center;
 
   margin-left: 20px;
-`;
-const Horario = styled.div`
-  width: 241px;
-
-  margin-bottom: 30px;
-
-  p {
-    font-family: "Roboto";
-    font-size: 20px;
-    color: #293845;
-
-    margin-bottom: 30px;
-  }
-`;
-
-const Botoes = styled.div``;
-
-const Botao = styled.button`
-  width: 83px;
-  height: 43px;
-
-  background-color: #e8833a;
-  border: none;
-  border-radius: 3px;
-
-  font-family: "Roboto";
-  font-size: 18px;
-  color: #ffffff;
-
-  margin-right: 10px;
-
-  cursor: pointer;
 `;
 
 const Footer = styled.div`
@@ -141,4 +114,34 @@ const Imagem = styled.div`
     width: 48px;
     height: 72px;
   }
+`;
+
+const CarregarContainer = styled.div`
+width: 100vw;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+
+p{
+      color: #e8833a;
+      font-family: "Roboto";
+      font-size: 16px;
+    }
+`;
+
+const Carregar = styled.div`
+    width: 50px;
+    height: 50px;
+    border: 6px solid #e5e5e5;
+    border-top-color: #e8833a;
+    border-radius: 50%;
+    animation: rotacao 1s infinite;
+
+    @keyframes rotacao {
+      to{
+        transform: rotate(1turn)
+      }
+    }
 `;

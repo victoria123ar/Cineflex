@@ -1,60 +1,42 @@
-import React from 'react';
-import Sonic from "../assets/sonic.jfif";
-import Avengers from "../assets/avengers.jfif";
+import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function Sessoes() {
+export default function Rota() {
+  const [filmes, setFilmes] = useState(undefined);
+
+  useEffect(() => {
+    axios
+      .get("https://mock-api.driven.com.br/api/v8/cineflex/movies")
+      .then(resposta => setFilmes(resposta.data))
+      .catch(erro => setFilmes(erro.data))
+  }, []);
+
+  if (!filmes) {
+    return <CarregarContainer>
+      <Carregar>
+      </Carregar>
+      <p>Carregando...</p>
+      </CarregarContainer>;
+  }
+
   return (
-      <main>
-        <Titulo>
-          <p>Selecione o filme</p>
-        </Titulo>
-        <Filmes>
-          <Link to = '/Sessões'>
-          <Filme>
-            <div className='selecionado'>
-          <img src={Avengers} alt="Avengers" />
-          </div>
+    <main>
+      <Titulo>
+        <p>Selecione o filme</p>
+      </Titulo>
+      <Filmes>
+        {filmes.map((filme) => (
+          <Filme key={filme.id}>
+            <Link to={`/Sessoes${filme.id}`}>
+                <img src={filme.posterURL} alt={filme.title} />
+            </Link>
           </Filme>
-          </Link>
-          <Link to = '/Sessões'>
-          <Filme>
-            <div className='filme'>
-          <img src={Sonic} alt="Sonic" />
-          </div>
-          </Filme>
-          </Link>
-          <Link to = '/Sessões'>
-          <Filme>
-            <div className='filme'>
-          <img src={Avengers} alt="Avengers" />
-          </div>
-          </Filme>
-          </Link>
-          <Link to = '/Sessões'>
-          <Filme>
-          <div className='filme'>
-          <img src={Sonic} alt="Sonic" />
-          </div>
-          </Filme>
-          </Link>
-          <Link to = '/Sessões'>
-          <Filme>
-          <div className='filme'>
-          <img src={Avengers} alt="Avengers" />
-          </div>
-          </Filme>
-          </Link>
-          <Link to = '/Sessões'>
-          <Filme>
-          <div className='filme'>
-          <img src={Sonic} alt="Sonic" />
-          </div>
-          </Filme>
-          </Link>
-        </Filmes>
-      </main>
+           ))}
+      </Filmes>
+    </main>
   );
 }
 
@@ -81,38 +63,52 @@ const Filmes = styled.div`
 
   margin-left: 30px;
 `;
+
 const Filme = styled.div`
-  .filme{
     width: 145px;
-  height: 209px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-bottom: 30px;
-
-  box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
-  }
-
-  .selecionado{
-    width: 129px;
-    height: 193px;
+    height: 209px;
 
     display: flex;
-  justify-content: center;
-  align-items: center;
+    justify-content: center;
+    align-items: center;
 
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 
-  box-shadow: none;
-  border-radius: none;
-  }
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
 
   img {
     width: 129px;
     height: 193px;
   }
+`;
 
+const CarregarContainer = styled.div`
+width: 100vw;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+
+p{
+      color: #e8833a;
+      font-family: "Roboto";
+      font-size: 16px;
+    }
+`;
+
+const Carregar = styled.div`
+    width: 50px;
+    height: 50px;
+    border: 6px solid #e5e5e5;
+    border-top-color: #e8833a;
+    border-radius: 50%;
+    animation: rotacao 1s infinite;
+
+    @keyframes rotacao {
+      to{
+        transform: rotate(1turn)
+      }
+    }
 `;

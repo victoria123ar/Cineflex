@@ -2,15 +2,37 @@ import React from 'react';
 import Sonic from "../assets/sonic.jfif";
 import styled from "styled-components";
 import { Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import axios from "axios"
 
-export default function Sessoes() {
+export default function Assentos() {
+  const { sessaoId } = useParams()
+  const [sessao, setSessao] = useState(undefined)
+
+  useEffect(() => {
+    axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${sessaoId}/seats`)
+        .then(resposta => setSessao(resposta.data))
+        .catch(erro => setSessao(erro.data))
+}, [])
+
+console.log(sessao)
+
+if (!sessao) {
+  return <CarregarContainer>
+    <Carregar>
+    </Carregar>
+    <p>Carregando...</p>
+    </CarregarContainer>;
+}
+
   return (
     <>
       <main>
         <Titulo>
           <p>Selecione o(s) assento(s)</p>
         </Titulo>
-        <Assentos>
+        <Lugares>
           <Assento>
             <Botao>01</Botao>
             <Botao>02</Botao>
@@ -77,7 +99,7 @@ export default function Sessoes() {
               <p>Indisponível</p>
             </Indisponivel>
           </Disposicao>
-        </Assentos>
+        </Lugares>
         <Dados>
           <Comprador>
             <p>Nome do comprador:</p>
@@ -123,7 +145,7 @@ const Titulo = styled.div`
   margin-bottom: 5px;
 `;
 
-const Assentos = styled.div`
+const Lugares = styled.div`
   max-width: 375px;
 
   display: flex;
@@ -361,4 +383,34 @@ const Texto = styled.div`
 
     margin-left: 15px;
   }
+`;
+
+const CarregarContainer = styled.div`
+width: 100vw;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+
+p{
+      color: #e8833a;
+      font-family: "Roboto";
+      font-size: 16px;
+    }
+`;
+
+const Carregar = styled.div`
+    width: 50px;
+    height: 50px;
+    border: 6px solid #e5e5e5;
+    border-top-color: #e8833a;
+    border-radius: 50%;
+    animation: rotacao 1s infinite;
+
+    @keyframes rotacao {
+      to{
+        transform: rotate(1turn)
+      }
+    }
 `;
