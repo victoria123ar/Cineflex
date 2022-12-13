@@ -4,12 +4,12 @@ import styled from "styled-components"
 
 export default function Sessao({filme}){
     return(
-         <Horario>
+         <Horario data-test='movie-day'>
               <p>{filme.weekday} - {filme.date}</p>
               <Botoes>
                 {filme.showtimes.map((horario) => (
-                <Link to = {`/Assentos/${horario.id}`} key={horario.id}>
-                <Botao>{horario.name}</Botao>
+                <Link to = {`/Assentos${horario.id}`} key={horario.id}>
+                <Botao data-test='showtime'>{horario.name}</Botao>
                 </Link>))}
               </Botoes>
             </Horario>

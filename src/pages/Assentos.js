@@ -1,30 +1,48 @@
-import React from 'react';
-import Sonic from "../assets/sonic.jfif";
+import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom"
-import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Assento from "../components/Assentos/Assento";
+import Inputs from "../components/Assentos/Inputs";
+import Footer from "../components/Footer";
 
-export default function Assentos() {
-  const { sessaoId } = useParams()
-  const [sessao, setSessao] = useState(undefined)
+export default function Assentos({ setSucesso }) {
+  const { sessaoId } = useParams();
+  const [sessao, setSessao] = useState(undefined);
+  const [assentoSelecionado, setAssentoSelecionado] = useState([]);
 
   useEffect(() => {
-    axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${sessaoId}/seats`)
-        .then(resposta => setSessao(resposta.data))
-        .catch(erro => setSessao(erro.data))
-}, [])
+    axios
+      .get(
+        `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${sessaoId}/seats`
+      )
+      .then((resposta) => setSessao(resposta.data))
+      .catch((erro) => console.log(erro.response.data));
+  }, []);
 
-console.log(sessao)
+  function escolherAssento(lugar) {
+    if (lugar.isAvailable === false) {
+      alert("Esse lugar não está disponível");
+    } else {
+      const Selecionado = assentoSelecionado.some(l => lugar.id === l.id)
+      if (Selecionado) {
+          const novaSelecao = assentoSelecionado.filter(l => lugar.id !== l.id)
+          setAssentoSelecionado(novaSelecao)
+      } else {
+        setAssentoSelecionado([...assentoSelecionado, lugar])
+      }
+    }
+  }
 
-if (!sessao) {
-  return <CarregarContainer>
-    <Carregar>
-    </Carregar>
-    <p>Carregando...</p>
-    </CarregarContainer>;
-}
+  if (!sessao) {
+    return (
+      <CarregarContainer>
+        <Carregar></Carregar>
+        <p>Carregando...</p>
+      </CarregarContainer>
+    );
+  }
 
   return (
     <>
@@ -33,58 +51,16 @@ if (!sessao) {
           <p>Selecione o(s) assento(s)</p>
         </Titulo>
         <Lugares>
-          <Assento>
-            <Botao>01</Botao>
-            <Botao>02</Botao>
-            <Botao>03</Botao>
-            <Botao>04</Botao>
-            <Botao>05</Botao>
-            <Botao>06</Botao>
-            <Botao>07</Botao>
-            <Botao>08</Botao>
-            <Botao>09</Botao>
-            <Botao>10</Botao>
-            <Botao>11</Botao>
-            <Botao>12</Botao>
-            <Botao>13</Botao>
-            <Botao>14</Botao>
-            <Botao>15</Botao>
-            <Botao>16</Botao>
-            <Botao>17</Botao>
-            <Botao>18</Botao>
-            <Botao>19</Botao>
-            <Botao>20</Botao>
-            <Botao>21</Botao>
-            <Botao>22</Botao>
-            <Botao>23</Botao>
-            <Botao>24</Botao>
-            <Botao>25</Botao>
-            <Botao>26</Botao>
-            <Botao>27</Botao>
-            <Botao>28</Botao>
-            <Botao>29</Botao>
-            <Botao>30</Botao>
-            <Botao>31</Botao>
-            <Botao>32</Botao>
-            <Botao>33</Botao>
-            <Botao>34</Botao>
-            <Botao>35</Botao>
-            <Botao>36</Botao>
-            <Botao>37</Botao>
-            <Botao>38</Botao>
-            <Botao>39</Botao>
-            <Botao>40</Botao>
-            <Botao>41</Botao>
-            <Botao>42</Botao>
-            <Botao>43</Botao>
-            <Botao>44</Botao>
-            <Botao>45</Botao>
-            <Botao>46</Botao>
-            <Botao>47</Botao>
-            <Botao>48</Botao>
-            <Botao>49</Botao>
-            <Botao>50</Botao>
-          </Assento>
+          <Lugar>
+            {sessao.seats.map((lugar) => (
+              <Assento
+                key={lugar.id}
+                lugar={lugar}
+                escolherAssento={escolherAssento}
+                Selecionado={assentoSelecionado.some(l => lugar.id === l.id)}
+              />
+            ))}
+          </Lugar>
           <Disposicao>
             <Selecionado>
               <div className="cor"></div>
@@ -100,31 +76,19 @@ if (!sessao) {
             </Indisponivel>
           </Disposicao>
         </Lugares>
-        <Dados>
-          <Comprador>
-            <p>Nome do comprador:</p>
-            <input placeholder="Digite seu nome..." type="text" />
-          </Comprador>
-          <CPF>
-            <p>CPF do comprador:</p>
-            <input placeholder="Digite seu CPF..." type="text" />
-          </CPF>
-        </Dados>
-        <Link to = '/Sucesso'>
-        <BotaoReservaContainer>
-          <BotaoReserva>Reservar assento(s)</BotaoReserva>
-        </BotaoReservaContainer>
-        </Link>
+        <Inputs
+          sessao={sessao}
+          assentoSelecionado={assentoSelecionado}
+          setAssentoSelecionado={setAssentoSelecionado}
+          setSucesso={setSucesso}
+        />
       </main>
-      <Footer>
-        <Imagem>
-          <img src={Sonic} alt="Sonic" />
-        </Imagem>
-        <Texto>
-          <p>Sonic 2</p>
-          <p>Quinta-feira - 15:00</p>
-        </Texto>
-      </Footer>
+      <Footer
+        titulo={sessao.movie.title}
+        poster={sessao.movie.posterURL}
+        dia={sessao.day.weekday}
+        hora={sessao.name}
+      />
     </>
   );
 }
@@ -153,25 +117,8 @@ const Lugares = styled.div`
   justify-content: center;
 `;
 
-const Assento = styled.div`
+const Lugar = styled.div`
   margin: 10px 20px;
-`;
-
-const Botao = styled.button`
-  width: 26px;
-  height: 26px;
-
-  background-color: #c3cfd9;
-  border: 1px solid #808f9d;
-  border-radius: 100%;
-
-  font-family: "Roboto";
-  font-size: 11px;
-  color: #000000;
-
-  margin: 7px 3.5px;
-
-  cursor: pointer;
 `;
 
 const Disposicao = styled.div`
@@ -242,175 +189,32 @@ const Indisponivel = styled.div`
   }
 `;
 
-const Dados = styled.div`
-  margin-top: 40px;
-  margin-left: 25px;
-`;
-
-const Comprador = styled.div`
-  margin-bottom: 10px;
-
-  p {
-    font-family: "Roboto";
-    font-size: 18px;
-    color: #293845;
-
-    margin-bottom: 2px;
-  }
-
-  input {
-    width: 305px;
-    height: 29px;
-
-    border: 1px solid #d4d4d4;
-    border-radius: 3px;
-
-    padding: 10px;
-
-    font-family: "Roboto";
-    font-size: 18px;
-    color: #293845;
-  }
-
-  input::placeholder {
-    font-family: "Roboto";
-    font-style: Italic;
-    font-size: 18px;
-    color: #afafaf;
-  }
-`;
-
-const CPF = styled.div`
-  margin-bottom: 70px;
-
-  p {
-    font-family: "Roboto";
-    font-size: 18px;
-    color: #293845;
-
-    margin-bottom: 2px;
-  }
-
-  input {
-    width: 305px;
-    height: 29px;
-
-    border: 1px solid #d4d4d4;
-    border-radius: 3px;
-
-    padding: 10px;
-
-    font-family: "Roboto";
-    font-size: 18px;
-    color: #293845;
-  }
-
-  input::placeholder {
-    font-family: "Roboto";
-    font-style: Italic;
-    font-size: 18px;
-    color: #afafaf;
-  }
-`;
-
-const BotaoReservaContainer = styled.div`
+const CarregarContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const BotaoReserva = styled.button`
-  width: 225px;
-  height: 42px;
-
-  background-color: #e8833a;
-  border: none;
-  border-radius: 3px;
-
-  font-family: "Roboto";
-  font-size: 18px;
-  color: #ffffff;
-
-  cursor: pointer;
-`;
-
-const Footer = styled.div`
-  max-width: 375px;
-  width: 100%;
-  height: 117px;
-
-  background-color: #dfe6ed;
-
-  border-top: 1px solid #9eadba;
-
-  position: fixed;
-  bottom: 0;
-  left: 0;
-
-  display: flex;
-  align-items: center;
-
-  padding-left: 10px;
-`;
-
-const Imagem = styled.div`
-  width: 64px;
-  height: 89px;
-
-  background-color: #ffffff;
-
-  box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 48px;
-    height: 72px;
-  }
-`;
-
-const Texto = styled.div`
-  display: flex;
   flex-direction: column;
 
   p {
+    color: #e8833a;
     font-family: "Roboto";
-    font-size: 26px;
-    color: #293845;
-
-    margin-left: 15px;
+    font-size: 16px;
   }
 `;
 
-const CarregarContainer = styled.div`
-width: 100vw;
-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
-
-p{
-      color: #e8833a;
-      font-family: "Roboto";
-      font-size: 16px;
-    }
-`;
-
 const Carregar = styled.div`
-    width: 50px;
-    height: 50px;
-    border: 6px solid #e5e5e5;
-    border-top-color: #e8833a;
-    border-radius: 50%;
-    animation: rotacao 1s infinite;
+  width: 50px;
+  height: 50px;
+  border: 6px solid #e5e5e5;
+  border-top-color: #e8833a;
+  border-radius: 50%;
+  animation: rotacao 1s infinite;
 
-    @keyframes rotacao {
-      to{
-        transform: rotate(1turn)
-      }
+  @keyframes rotacao {
+    to {
+      transform: rotate(1turn);
     }
+  }
 `;

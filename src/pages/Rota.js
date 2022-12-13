@@ -10,16 +10,17 @@ export default function Rota() {
   useEffect(() => {
     axios
       .get("https://mock-api.driven.com.br/api/v8/cineflex/movies")
-      .then(resposta => setFilmes(resposta.data))
-      .catch(erro => setFilmes(erro.data))
+      .then((resposta) => setFilmes(resposta.data))
+      .catch((erro) => setFilmes(erro.data));
   }, []);
 
   if (!filmes) {
-    return <CarregarContainer>
-      <Carregar>
-      </Carregar>
-      <p>Carregando...</p>
-      </CarregarContainer>;
+    return (
+      <CarregarContainer>
+        <Carregar></Carregar>
+        <p>Carregando...</p>
+      </CarregarContainer>
+    );
   }
 
   return (
@@ -29,12 +30,12 @@ export default function Rota() {
       </Titulo>
       <Filmes>
         {filmes.map((filme) => (
-          <Filme key={filme.id}>
+          <Filme data-test='movie' key={filme.id}>
             <Link to={`/Sessoes${filme.id}`}>
-                <img src={filme.posterURL} alt={filme.title} />
+              <img src={filme.posterURL} alt={filme.title} />
             </Link>
           </Filme>
-           ))}
+        ))}
       </Filmes>
     </main>
   );
@@ -65,17 +66,17 @@ const Filmes = styled.div`
 `;
 
 const Filme = styled.div`
-    width: 145px;
-    height: 209px;
+  width: 145px;
+  height: 209px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 
-    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.15);
-    border-radius: 3px;
+  box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
 
   img {
     width: 129px;
@@ -84,31 +85,31 @@ const Filme = styled.div`
 `;
 
 const CarregarContainer = styled.div`
-width: 100vw;
-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-p{
-      color: #e8833a;
-      font-family: "Roboto";
-      font-size: 16px;
-    }
+  p {
+    color: #e8833a;
+    font-family: "Roboto";
+    font-size: 16px;
+  }
 `;
 
 const Carregar = styled.div`
-    width: 50px;
-    height: 50px;
-    border: 6px solid #e5e5e5;
-    border-top-color: #e8833a;
-    border-radius: 50%;
-    animation: rotacao 1s infinite;
+  width: 50px;
+  height: 50px;
+  border: 6px solid #e5e5e5;
+  border-top-color: #e8833a;
+  border-radius: 50%;
+  animation: rotacao 1s infinite;
 
-    @keyframes rotacao {
-      to{
-        transform: rotate(1turn)
-      }
+  @keyframes rotacao {
+    to {
+      transform: rotate(1turn);
     }
+  }
 `;

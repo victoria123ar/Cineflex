@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
 
- export default function Header() {
-    return(     
-      <Cabecalho>
-        <h1>CINEFLEX</h1>
-      </Cabecalho>
-    )
+export default function Header() {
+  return (
+    <Cabecalho>
+      <h1>CINEFLEX</h1>
+    </Cabecalho>
+  );
 }
 
 const Cabecalho = styled.div`

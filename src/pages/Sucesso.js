@@ -2,7 +2,11 @@ import React from 'react';
 import styled from "styled-components";
 import { Link } from "react-router-dom"
 
-export default function Sucesso() {
+export default function Sucesso(sucesso) {
+  //const { filme, data, hora, nome, cpf, assentos } = sucesso
+
+  console.log(sucesso.sucesso)
+
   return (
       <main>
       <TituloCentralizado>
@@ -11,25 +15,24 @@ export default function Sucesso() {
         </Titulo>
         </TituloCentralizado>
         <Dados>
-          <Filme>
+          <Filme data-test='movie-info'>
             <h4>Filme e sessão</h4>
-            <p>Sonic 2</p>
-            <p>24/06/2021 15:00</p>
+            <p>{sucesso.sucesso.filme}</p>
+            <p>{sucesso.sucesso.data} {sucesso.sucesso.hora}</p>
           </Filme>
-          <Ingresso>
+          <Ingresso data-test='seats-info'>
           <h4>Ingressos</h4>
-            <p>Assento 15</p>
-            <p>Assento 16</p>
+          {sucesso.sucesso.assentos.map(assento => <p key={assento}>Assento {assento}</p>)}
           </Ingresso>
-          <Comprador>
+          <Comprador data-test='client-info'>
           <h4>Comprador</h4>
-            <p>Nome: João da Silva Sauro</p>
-            <p>CPF: 123.456.789-10</p>
+            <p>Nome: {sucesso.sucesso.nome}</p>
+            <p>CPF: {sucesso.sucesso.cpf}</p>
           </Comprador>
         </Dados>
         <Link to = '/'>
         <BotaoHomeContainer>
-          <BotaoHome>Voltar pra Home</BotaoHome>
+          <BotaoHome data-test='go-home-btn'>Voltar pra Home</BotaoHome>
         </BotaoHomeContainer>
         </Link>
       </main>
