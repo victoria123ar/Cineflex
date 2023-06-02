@@ -27,11 +27,9 @@ Para executar o projeto em sua máquina local, siga estas etapas:
 1. Certifique-se de ter o Node.js instalado em seu sistema.
 2. Clone este repositório para sua máquina:
 **git clone https://github.com/victoria123ar/Cineflex.git**
-3. Navegue até o diretório do projeto:
-**cd Cineflex**
-4. Instale as dependências do projeto:
+3. Instale as dependências do projeto:
 **npm install**
-5. Inicie o servidor de desenvolvimento:
+4. Inicie o servidor de desenvolvimento:
 **npm start**
 
 ## Autor
